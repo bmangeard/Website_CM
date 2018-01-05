@@ -27,9 +27,7 @@ body{
 	background: rgb(34,34,34); /* for IE */
 	background: rgba(34,34,34,0.50);
 }
-footer{
-		font-size: 70%;
-}
+
 #contact_sep{
 	border-top: solid;
 	border-top-width: 1px;
@@ -43,6 +41,17 @@ footer{
 }
 #photo{
 	max-width: 50%;
+}
+
+.logo_clients{
+	max-width: 40%;
+}
+object{
+	
+	max-width: 80%;
+}
+footer{
+	font-size: 70%;
 }
 /* Téléphones portable */
 @media only screen and (max-width: 767px) {
@@ -74,11 +83,4 @@ footer{
 		border-top-width: 1px;
 		font-size: 80%;
 	}
-}
-#logo_clients{
-	max-width: 40%;
-}
-object{
-	
-	max-width: 80%;
 }

@@ -2,9 +2,8 @@
 <html lang="fr">
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
 	<title>Charlotte Malétras</title>
-	<meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, maximum-scale = 1.0, minimum-scale=1.0,initial-scale=1.0" >
 	<link rel="stylesheet" href="font_awesome_5.0.2/web-fonts-with-css/css/fontawesome-all.css">
     <link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="style.css">
@@ -24,7 +23,7 @@
 					<div class="col text-center">
 						<div class="content">
 							<br>
-							<h2 class="text-white">Montage vidéo | Le Havre</h2>
+							<h1 class="text-white">Montage vidéo | Le Havre</h1>
 							<p class="text-white">Freelance dans le montage vidéo, je vous accompagne pour la succès de vos visuels, que vous soyez un professionnel ou un particulier.</p>
 							<br>
 						</div>
@@ -45,7 +44,7 @@
 			<div class="main">
 				<div class="row mt-3 mr-1">
 					<div class="col text-right">
-							<button id="btn_close" type="button" class="btn btn-outline-light" onclick="propos()">X</button>
+							<button type="button" class="btn btn-outline-light" onclick="propos()">X</button>
 					</div>
 				</div>				
 				<div class="row mt-3 ml-4">
@@ -89,49 +88,43 @@
 			<div class="main">
 				<div class="row mt-3 mr-1">
 					<div class="col text-right">
-							<button id="btn_close" type="button" class="btn btn-outline-light" onclick="real()">X</button>
+							<button type="button" class="btn btn-outline-light" onclick="real()">X</button>
 					</div>
 				</div>	
 				<div class="row mt-3 ml-4">
 					<div class="col text-left">
-						<h3 class="text-white"><u>Réalisations :</u></h3>
+						<h2 class="text-white"><u>Réalisations :</u></h2>
 						<p class="text-white">Mon activitée est très variées, télévisions, radios, vidéos youtube, mariages, compétitions sportives...<br>
 						En voici quelques exemples :</p>
 					</div>
 				</div>		
 				<div class="row mt-3">
 					<div class="col text-center">
-  						<img src="img/star24.jpg" alt="star24" id="logo_clients"/>
+  						<img src="img/star24.jpg" alt="star24" class="logo_clients"/>
 					</div>
 					<div class="col text-center">
-  						<img src="img/star24.jpg" alt="star24" id="logo_clients"/>
+  						<img src="img/star24.jpg" alt="star24" class="logo_clients"/>
 					</div>
 					<div class="col text-center">
-  						<img src="img/star24.jpg" alt="star24" id="logo_clients"/>
+  						<img src="img/star24.jpg" alt="star24" class="logo_clients"/>
 					</div>
 				</div>
 				<div class="row mt-3 mb-4">
 					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
 						<div class="content">
-							<p class="text-white">Star 24 (Montage et voix off)</p>
+							<h4 class="text-white">Star 24 (Montage et voix off)</h4>
 							<object type="application/x-shockwave-flash" width="425" height="355" data="https://www.youtube.com/v/5UyzJrqhUZg">
 								<param name="movie" value="https://www.youtube.com/v/5UyzJrqhUZg" />
 								<param name="wmode" value="transparent" />
 							</object>
-							<!--[if lte IE 6 ]>
-								<embed src="https://www.youtube.com/watch?v=5UyzJrqhUZg" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355"></embed>
-							<![endif]-->
 						</div>	
 					</div>	
 					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center">
-						<p class="text-white">LHUT (Montage)</p>
+						<h4 class="text-white">LHUT (Montage)</h4>
 						<object type="application/x-shockwave-flash" width="425" height="355" data="https://www.youtube.com/v/wL-88DpVC70">
 							<param name="movie" value="https://www.youtube.com/v/wL-88DpVC70" />
 							<param name="wmode" value="transparent" />
 						</object>
-						<!--[if lte IE 6 ]>
-							<embed src="https://www.youtube.com/v/wL-88DpVC70" type="application/x-shockwave-flash" wmode="transparent" width="425" height="355"></embed>
-						<![endif]-->
 					</div>
 				</div>		
 			</div>
@@ -140,7 +133,7 @@
 			<div class="main">
 				<div class="row mt-3 mr-1">
 					<div class="col text-right">
-							<button id="btn_close" type="button" class="btn btn-outline-light" onclick="contact()">X</button>
+							<button type="button" class="btn btn-outline-light" onclick="contact()">X</button>
 					</div>
 				</div>				
 				<div class="row ml-4 mr-4">
@@ -151,7 +144,7 @@
 						</div>
 					</div>
 				</div>	
-				<div class="row mt-3 mb-3 ml-2 mr-2">
+				<div class="row mt-3 mb-1 ml-2 mr-2">
 					<div class="col text-center">
 						<div class="content">
 							<div class="container text-white">
@@ -193,8 +186,7 @@
 								<div class="row mt-4" id="contact_sep">
 									<div class="col">
 										<ul class="list-inline text-left">
-											<br>
-											<li><label><i class="fa fa-phone" aria-hidden="true"></i> | 06 69 47 40 98</label>
+											<li><label><i class="fa fa-phone mt-4" aria-hidden="true"></i> | 06 69 47 40 98</label>
 											<li><label><i class="fa fa-envelope" aria-hidden="true"></i>  | contact@charlottemaletras.com</label>
 										</ul>
 									</div>
@@ -254,6 +246,5 @@
 			}
 		}
 	</script>
-	
 </body>
 </html>
