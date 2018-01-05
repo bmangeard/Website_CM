@@ -41,6 +41,9 @@ footer{
 	display: flex;
 	align-items: center;
 }
+#photo{
+	max-width: 50%;
+}
 /* Téléphones portable */
 @media only screen and (max-width: 767px) {
   body {
@@ -63,12 +66,17 @@ footer{
 	footer{
 		font-size: 50%;
 	}
+	#photo{
+		max-width: 100%;
+	}
+	#contact_sep{
+		border-top: solid;
+		border-top-width: 1px;
+		font-size: 80%;
+	}
 }
 #logo_clients{
 	max-width: 40%;
-}
-#photo{
-	max-width: 50%;
 }
 object{
 	

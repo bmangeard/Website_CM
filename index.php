@@ -180,7 +180,7 @@
 												Vous êtes un professionnel.
 												</label>
 											</div>
-											<div class="form-check text-left">
+											<div class="form-check text-left mb-3">
 												<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
 												<label class="form-check-label" for="exampleRadios2">
 												Vous êtes un particulier.
