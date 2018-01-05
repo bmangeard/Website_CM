@@ -1,0 +1,76 @@
+body{
+	font-family: "Myriad Pro";
+}
+.menu, .main{
+	background-image: url(img/bg2.jpg);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+}
+.list-group-item{
+	background-color: transparent;
+	border-color: white;
+	color: white;
+}
+.main{
+	border-bottom: solid;
+	border-bottom-left-radius: 10px;
+	border-bottom-width: 2px;
+	border-bottom-color: transparent;
+
+	border-top: solid;
+	border-top-right-radius: 10px;
+	border-top-width: 2px;
+	border-top-color: transparent;
+
+	background: rgb(34,34,34); /* for IE */
+	background: rgba(34,34,34,0.50);
+}
+footer{
+		font-size: 70%;
+}
+#contact_sep{
+	border-top: solid;
+	border-top-width: 1px;
+}
+.menu{
+	min-height: 100%;
+	min-height: 100vh; 
+
+	display: flex;
+	align-items: center;
+}
+/* Téléphones portable */
+@media only screen and (max-width: 767px) {
+  body {
+    background-image: url(img/bg2.jpg);
+  }
+	.main{
+		border-bottom: solid;
+		border-bottom-left-radius: 10px;
+		border-bottom-width: 2px;
+		border-bottom-color: transparent;
+
+		border-top: solid;
+		border-top-right-radius: 10px;
+		border-top-width: 2px;
+		border-top-color: transparent;
+		
+		background: rgb(34,34,34); /* for IE */
+		background: rgba(34,34,34,0.50);
+	}
+	footer{
+		font-size: 50%;
+	}
+}
+#logo_clients{
+	max-width: 40%;
+}
+#photo{
+	max-width: 50%;
+}
+object{
+	
+	max-width: 80%;
+}
