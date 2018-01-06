@@ -1,3 +1,166 @@
+<?php
+
+	session_start();
+	session_destroy();
+    /*
+		Mise en place
+    */
+    $destinataire = 'c.maletras@gmail.com';
+   
+    // Copie du mail pour le client?
+    $copie = 'oui';
+
+    // Action du formulaire (si votre page a des paramètres dans l'URL)
+	// si cette page est index.php?page=contact alors mettez index.php?page=contact
+	// sinon, laissez vide
+	$form_action = '';
+
+    // Messages de confirmation du mail
+    $message_envoye = "Votre message nous est bien parvenu !";
+    $message_non_envoye = "L'envoi du mail a échoué, veuillez réessayer SVP.";
+     
+    // Message d'erreur du formulaire
+    $message_formulaire_invalide = "Vérifiez que tous les champs soient bien remplis et que l'email soit sans erreur.";
+     
+    /*
+     * Fonction qui nettoye et enregistrer un texte
+     */
+    function Rec($text)
+    {
+    	$text = htmlspecialchars(trim($text), ENT_QUOTES);
+    	if (1 === get_magic_quotes_gpc())
+    	{
+    		$text = stripslashes($text);
+    	}
+     
+    	$text = nl2br($text);
+    	return $text;
+    };
+     
+    /*
+     * Fonction servant à vérifier la syntaxe d'un Email
+     */
+    function IsEmail($InputEmail)
+    {
+    	$value = preg_match('/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!\.)){0,61}[a-zA-Z0-9_-]?\.)+[a-zA-Z0-9_](?:[a-zA-Z0-9_\-](?!$)){0,61}[a-zA-Z0-9_]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/', $InputEmail);
+    	return (($value === 0) || ($value === false)) ? false : true;
+    }
+     
+    // On récupère tous les champs
+    $InputNom     = (isset($_POST['InputNom']))     ? Rec($_POST['InputNom'])     : '';
+    $InputEmail   = (isset($_POST['InputEmail']))   ? Rec($_POST['InputEmail'])   : '';
+    $InputObjet   = (isset($_POST['InputObjet']))   ? Rec($_POST['InputObjet'])   : '';
+    $InputMessage = (isset($_POST['InputMessage'])) ? Rec($_POST['InputMessage']) : '';
+    $InputRadio = (isset($_POST['exampleRadios']))  ? $_POST['exampleRadios']     : '';
+    if($InputRadio=="option1"){
+		$InputRadio="Professionnel";
+	}else{
+		$InputRadio="Particulier";
+	}
+
+    // On va vérifier les variables et l'Email ...
+    $InputEmail = (IsEmail($InputEmail)) ? $InputEmail : ''; // Soit l'Email est vide si erroné, soit il vaut l'Email entré
+    $err_formulaire = false; // Pour remplir le formulaire en cas d'erreur
+    
+    if (isset($_POST['envoi']))
+    {
+    	if (($InputNom != '') && ($InputEmail != '') && ($InputObjet != '') && ($InputMessage != ''))
+    	{
+    		// les 4 variables sont remplies, on génère puis envoie le mail
+    		$headers  = 'From:'.$InputNom.' <'.$InputEmail.'>' . "\r\n";
+    		$headers .= 'Reply-To: '.$InputEmail. "\r\n" ;
+    		$headers .= 'X-Mailer:PHP/'.phpversion();
+     
+    		// envoyer une copie au visiteur ?
+    		if ($copie == 'oui')
+    		{
+    			$cible = $destinataire.';'.$InputEmail;
+    		}
+    		else
+    		{
+    			$cible = $destinataire;
+    		};
+     
+    		// Remplacement de certains caractères spéciaux
+    		$InputMessage = str_replace("&#039;","'",$InputMessage);
+    		$InputMessage = str_replace("&#8217;","'",$InputMessage);
+    		$InputMessage = str_replace("&quot;",'"',$InputMessage);
+    		$InputMessage = str_replace('&lt;br&gt;','',$InputMessage);
+    		$InputMessage = str_replace('&lt;br /&gt;','',$InputMessage);
+    		$InputMessage = str_replace("&lt;","&lt;",$InputMessage);
+    		$InputMessage = str_replace("&gt;","&gt;",$InputMessage);
+    		$InputMessage = str_replace("&amp;","&",$InputMessage);
+     
+    		// Envoi du mail
+    		$num_InputEmails = 0;
+    		$tmp = explode(';', $cible);
+    		foreach($tmp as $InputEmail_destinataire)
+    		{
+    			if (mail($InputEmail_destinataire, $InputObjet, $InputMessage, $headers))
+    				$num_InputEmails++;
+    		}
+     
+			
+    		if ((($copie == 'oui') && ($num_InputEmails == 2)) || (($copie == 'non') && ($num_InputEmails == 1)))
+    		{
+    			$_SESSION['message_envoye'] = $message_envoye;
+				
+			//////////////////////////////////////////////////////////////////
+				// Connection "Base de Donnée"
+				
+					try{
+						//Déclaration variables connection Base de données
+						$db_host='localhost';
+						$db_name='testcm';
+						$db_user='root';
+						$db_mdp='';
+
+						//On se connecte
+						$conn = new PDO("mysql:host={$db_host};dbname={$db_name}",$db_user,$db_mdp);
+						$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+						echo "test";
+						
+					}catch(Exeption $e){
+						die('Erreur : '.$e->getMessage());
+					}
+					// Evite copie inutile de clients
+					$nomExiste = true;
+					$stmt = $conn->prepare('SELECT NOM_CLIENTS, EMAIL_CLIENTS FROM clients');
+					$stmt->execute();
+
+					while($donnees = $stmt->fetch()){
+						if((($donnees['NOM_CLIENTS'] != $InputNom) && ($donnees['EMAIL_CLIENTS'] != $InputEmail))){
+							$nomExiste = false;
+						}else{
+							$nomExiste = true;
+						}
+					}
+					if($nomExiste==false){	   
+						// Prepare statment
+						$stmt = $conn->prepare("INSERT INTO clients (NOM_CLIENTS, EMAIL_CLIENTS,TYPE_CLIENTS) VALUES (?,?,?)");
+						$stmt->bindParam(1, $InputNom);
+						$stmt->bindParam(2, $InputEmail);
+						$stmt->bindParam(3, $InputRadio);
+						$stmt->execute();
+					}
+
+			//////////////////////////////////////////////////////////////////
+					}
+					else
+					{
+						$_SESSION['message_non_envoye'] = $message_non_envoye;
+						$err_formulaire = true;
+					};
+    	}
+    	else
+    	{
+    		// une des 3 variables (ou plus) est vide ...
+    		$_SESSION['message_formulaire_invalide'] = $message_formulaire_invalide;
+    		$err_formulaire = true;
+    	};
+    }; // fin du if (!isset($_POST['envoi']))
+?>
+
 <!doctype html>
 <html lang="fr">
 <head>
@@ -36,6 +199,27 @@
 							<button id="btn_real" type="button" class="btn btn-outline-light" onclick="real()">Réalisations</button>
 							<button id="btn_contact" type="button" class="btn btn-outline-light" onclick="contact()">Contact</button>
 						</div>
+					</div>
+				</div>
+				<div class="row mt-3 ml-1">
+					<div class="col text-center">
+						<label class="text-danger">
+							<?php
+								if(isset($_SESSION['message_non_envoye'])){
+									echo $_SESSION['message_non_envoye'];
+								}
+								if(isset($_SESSION['message_formulaire_invalide'])){
+									echo $_SESSION['message_formulaire_invalide'];
+								}
+							?>
+						</label>
+						<label class="text-success">
+							<?php
+								if(isset($_SESSION['message_envoye'])){
+									echo $_SESSION['message_envoye'];
+								}
+							?>
+						</label>
 					</div>
 				</div>
 			</div>
@@ -150,37 +334,77 @@
 							<div class="container text-white">
 								<div class="row">
 									<div class="col">
-										<form class="form-horizontal" method="post" action="formulaire.inc.php">
-											<div class="form-group">
-												<label for="InputPrenom">Prénom</label>
-												<input type="text" class="form-control" id="InputPrenom" name="InputPrenom" placeholder="Votre prénom" required>
-											</div>
-											<div class="form-group">
-												<label for="InputName">Nom</label>
-												<input type="text" class="form-control" id="InputName" name="InputName" placeholder="Votre nom" required>
-											</div>
-											<div class="form-group">
-												<label for="InputEmail">Email</label>
-												<input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="nom@exemple.com" required>
-											</div>
-											<div class="form-group ">
-												<label for="InputText">Votre message</label>
-												<textarea  class="form-control" id="InputText" name="InputText" placeholder="Votre message" required></textarea> 
-											</div>
-											<div class="form-check text-left">
-												<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-												<label class="form-check-label" for="exampleRadios1">
-												Vous êtes un professionnel.
-												</label>
-											</div>
-											<div class="form-check text-left mb-3">
-												<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-												<label class="form-check-label" for="exampleRadios2">
-												Vous êtes un particulier.
-												</label>
-											</div>
-											<button type="submit" class="btn btn-outline-light">Envoyer</button>
-										</form>
+										<?php  
+											if (($err_formulaire) || (!isset($_POST['envoi'])))
+											{
+											// afficher le formulaire
+											echo '
+												<form class="form-horizontal" method="post" action="index.php">
+												<div class="form-group">
+													<label for="InputNom">Nom</label>
+													<input type="text" class="form-control" id="InputNom" name="InputNom" placeholder="Votre nom" value="'.stripslashes($InputNom).'" tabindex="1">
+												</div>
+												<div class="form-group">
+													<label for="InputEmail">Email</label>
+													<input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="nom@exemple.com" value="'.stripslashes($InputEmail).'" tabindex="2" >
+												</div>
+												<div class="form-group">
+													<label for="InputObjet">Objet</label>
+													<input type="text" class="form-control" id="InputObjet" name="InputObjet" placeholder="Objet" value="'.stripslashes($InputObjet).'" tabindex="3" >
+												</div>
+												<div class="form-group ">
+													<label for="InputText">Votre message</label>
+													<textarea  class="form-control" id="InputMessage" name="InputMessage" placeholder="Votre message" tabindex="4" rows="4">'.stripslashes($InputMessage).'</textarea> 
+												</div>
+												<div class="form-check text-left">
+													<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+													<label class="form-check-label" for="exampleRadios1">
+													Vous êtes un professionnel.
+													</label>
+												</div>
+												<div class="form-check text-left mb-3">
+													<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+													<label class="form-check-label" for="exampleRadios2">
+													Vous êtes un particulier.
+													</label>
+												</div>
+												<button type="submit" class="btn btn-outline-light" name="envoi">Envoyer</button>
+											</form>'
+											;}else{
+											echo'	
+											<form class="form-horizontal" method="post" action="index.php">
+												<div class="form-group">
+													<label for="InputNom">Nom</label>
+													<input type="text" class="form-control" id="InputNom" name="InputNom" placeholder="Votre nom">
+												</div>
+												<div class="form-group">
+													<label for="InputEmail">Email</label>
+													<input type="email" class="form-control" id="InputEmail" name="InputEmail" placeholder="nom@exemple.com">
+												</div>
+												<div class="form-group">
+													<label for="InputObjet">Objet</label>
+													<input type="text" class="form-control" id="InputObjet" name="InputObjet" placeholder="Objet">
+												</div>
+												<div class="form-group ">
+													<label for="InputText">Votre message</label>
+													<textarea  class="form-control" id="InputMessage" name="InputMessage" placeholder="Votre message" rows="4"></textarea> 
+												</div>
+												<div class="form-check text-left">
+													<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+													<label class="form-check-label" for="exampleRadios1">
+													Vous êtes un professionnel.
+													</label>
+												</div>
+												<div class="form-check text-left mb-3">
+													<input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+													<label class="form-check-label" for="exampleRadios2">
+													Vous êtes un particulier.
+													</label>
+												</div>
+												<button type="submit" class="btn btn-outline-light" name="envoi">Envoyer</button>
+											</form>';
+											};
+										?>			
 									</div>
 								</div>	
 								<div class="row mt-4" id="contact_sep">
